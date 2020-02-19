@@ -6,7 +6,6 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Math_KDK.h"
 #include "PNode.h"
 #include "PNode_Min_Heap_Opt.h"
 #include "PNode_Map.h"
@@ -23,5 +22,6 @@ private:
     LNode_Min_Heap_Opt open_List;
     float H_Calculat(PNode *cur,PNode *end);
     int Search();
+    float float_abs(float x);
 };
 #endif // A_STAR_H

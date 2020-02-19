@@ -2,7 +2,7 @@
 
 //#include <queue>
 //#include <stdio.h>
-#include <math.h>
+//#include <math.h>
 #include <iostream>
 
 #include <vector>
@@ -82,11 +82,13 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
 
 float A_Star::H_Calculat(PNode *cur,PNode *end)
 {
-    Math_KDK math_kdk;
-    float res=math_kdk.abs(cur->x-end->x)+math_kdk.abs(cur->y-end->y);
+    float res=float_abs(cur->x-end->x)+float_abs(cur->y-end->y);
     return res;
 }
 
+float A_Star::float_abs(float x){
+    return x > 0 ? x:-x;
+}
 
 
 int A_Star::Search()
