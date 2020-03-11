@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 #include "PNode.h"
-#include "PNode_Min_Heap_Opt.h"
+#include "Min_Heap_Map_Opt.h"
 #include "PNode_Map.h"
 
 
@@ -19,7 +19,7 @@ public:
 
 private:
     PNode_Map map;
-    Min_Heap_Map_Opt open_List;
+    Min_Heap_Map_Opt<float,PNode> open_List;
     float H_Calculat(PNode *cur,PNode *end);
     int Search();
     float float_abs(float x);

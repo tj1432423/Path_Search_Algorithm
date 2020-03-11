@@ -7,8 +7,6 @@
 
 class PNode_Map{
 public:
-//    PNode_Map(const vector<vector<int>>& array);
-
     void Build_Map(const vector<vector<int>>& array);
     void Clear_Map();
     PNode* Start_node;
