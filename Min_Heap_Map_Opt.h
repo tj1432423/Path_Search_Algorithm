@@ -2,15 +2,15 @@
 #define PNODE_MIN_HEAP_OPT_H
 
 #include <unordered_map>
-//#include <stdio.h>
 #include <iostream>
+#include <vector>
+using namespace std;
 
-#include "PNode.h"
-
+template<class T_VALUE,class T_NODE>
 
 class Min_Heap_Map_Opt{
 public:
-    void Heap_push(const pair<float,PNode *>& new_node_pair){
+    void Heap_push(const pair<T_VALUE,T_NODE *>& new_node_pair){
         Min_Heap.push_back(new_node_pair);
         Mp[new_node_pair.second]=Min_Heap.size()-1;
         siftup(Min_Heap.size()-1);
@@ -33,7 +33,7 @@ public:
         siftdown(0);
     }
 
-    void Heap_delect(PNode* obj_Node){
+    void Heap_delect(T_NODE* obj_Node){
         if(Mp.count(obj_Node)==0){
             cout<<" Cannot find this node in Open_List_Min_Heap!!! "<<endl;
             return;
@@ -55,7 +55,7 @@ public:
         return Min_Heap.size();
     }
 
-    pair<float,PNode *> Heap_top(){
+    pair<T_VALUE,T_NODE *> Heap_top(){
         if (Min_Heap.empty()){
             cout<<" The Open_List_Min_Heap is empty !!! "<<endl;
             return make_pair(0,nullptr);
@@ -105,8 +105,8 @@ private:
         }
     }
 
-    vector<pair<float,PNode *>> Min_Heap;
-    unordered_map<PNode *,size_t> Mp;
+    vector<pair<T_VALUE,T_NODE *>> Min_Heap;
+    unordered_map<T_NODE *,size_t> Mp;
 };
 
 

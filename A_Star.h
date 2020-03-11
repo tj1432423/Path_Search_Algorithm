@@ -19,7 +19,7 @@ public:
 
 private:
     PNode_Map map;
-    LNode_Min_Heap_Opt open_List;
+    Min_Heap_Map_Opt open_List;
     float H_Calculat(PNode *cur,PNode *end);
     int Search();
     float float_abs(float x);
