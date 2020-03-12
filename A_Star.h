@@ -17,9 +17,14 @@ public:
     int Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Time);
     vector<vector<float>> Shortest_Path;
 
+    int Shortest_Path_Long;
+    int Count;  //Search Time
+
 private:
     PNode_Map map;
     Min_Heap_Map_Opt<float,PNode> open_List;
+
+    bool Input_Verify(const vector<vector<int>>& array);
     float H_Calculat(PNode *cur,PNode *end);
     int Search();
     float float_abs(float x);

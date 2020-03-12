@@ -7,12 +7,12 @@
 using namespace std;
 
 template<class T_VALUE,class T_NODE>
-
 class Min_Heap_Map_Opt{
 public:
     void Heap_push(const pair<T_VALUE,T_NODE *>& new_node_pair);
     void Heap_pop();
-    void Heap_delect(T_NODE* obj_Node);
+    void Heap_delect(T_NODE* const obj_Node);
+    void Heap_modify(T_NODE* const obj_Node,T_VALUE obj_val);
     size_t Heap_size();
     pair<T_VALUE,T_NODE *> Heap_top();
 
@@ -55,9 +55,9 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_pop(){
 
 
 template<class T_VALUE,class T_NODE>
-void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_delect(T_NODE* obj_Node){
+void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_delect(T_NODE* const obj_Node){
     if(Mp.count(obj_Node)==0){
-        cout<<" Cannot find this node in Open_List_Min_Heap!!! "<<endl;
+        cout<<" Cannot find this node in Open_List_Min_Heap!!! ----Heap_delect"<<endl;
         return;
     }
     size_t index=Mp[obj_Node];
@@ -72,6 +72,23 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_delect(T_NODE* obj_Node){
         siftdown(index);
     }
 }
+
+template<class T_VALUE,class T_NODE>
+void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_modify(T_NODE* const obj_Node,T_VALUE obj_val){
+    if(Mp.count(obj_Node)==0){
+        cout<<" Cannot find this node in Open_List_Min_Heap!!! ----Heap_modify"<<endl;
+        return;
+    }
+    size_t index=Mp[obj_Node];
+    Min_Heap[index].first=obj_val;    //update
+    if (index!=0 && Min_Heap[index]<Min_Heap[(index-1)/2]){     // 若节点小于父亲节点上浮
+        siftup(index);
+    }
+    else{                                                        // 若节点不于父亲节点下沉
+        siftdown(index);
+    }
+}
+
 
 
 template<class T_VALUE,class T_NODE>

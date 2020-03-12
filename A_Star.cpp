@@ -11,6 +11,23 @@
 using namespace std;
 
 int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Time){
+    //为简单，干脆把把下面数组转为链表结构的数组
+    //约定：0是可走的，1表示障碍物不可走，2表示起点，3表示终点
+//    vector<vector<int>> array={
+//        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//        { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
+//        { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+//        { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
+//        { 0, 0, 0, 0, 0, 1, 3, 0, 0, 0 },
+//        { 0, 0, 2, 0, 0, 1, 0, 0, 0, 0 },
+//        { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
+//        { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
+//        { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
+//        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+    int Error_flag=0;
+    bool Input_OK=false;
+    Input_OK =Input_Verify(array);
+    if(!Input_OK) return Error_flag;
     map.Build_Map(array);
 
     //PNode *Start_node;
@@ -26,9 +43,9 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
 //   cout<<"hello world!  "<<Open_List->next->G<<" , "<<Open_List->next->H<<endl;
 
 /********** main search ****************/
+    Shortest_Path_Long=-1;
+    Count=0;
     int Search_end_flag;
-    int Error_flag;
-    int Count=0;
     while(1)
     {
         //cout<<"Count=  "<<Count<<endl;
@@ -63,7 +80,7 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
             //cout<<" ["<<tmp->x<<" , "<<tmp->y<<"] -> ";
             Shortest_Path.push_back({tmp->x,tmp->y});
             tmp=tmp->path_before;
-
+            Shortest_Path_Long++;
         }
         //reverse(Shortest_Path.begin(),Shortest_Path.end());  // " use of undlclared identifier 'reverse' ..."  ----it is why?
         for(size_t i=0;i<Shortest_Path.size()/2;i++){
@@ -77,7 +94,29 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
     return Error_flag;
 }
 
-
+bool A_Star::Input_Verify(const vector<vector<int>>& array){
+    int Start_Point_Count=0,End_Point_Count=0;
+    for(size_t i=0;i<array.size();i++){
+        if(array[i].size() != array[0].size()){
+            cout<<" Fatal Wrong , The Input Must be a Mutrix !!! "<<endl;
+            return false;
+        }
+        for(size_t j=0;j<array[i].size();j++){
+            if (array[i][j]<0 || array[i][j]>3){
+                cout<<" Fatal Wrong , The Value in the Input Mutrix must be 0, 1, 2, 3  !!! "<<endl;
+                return false;
+            }
+            if (array[i][j]==2) Start_Point_Count++;
+            if (array[i][j]==3) End_Point_Count++;
+        }
+    }
+    if (Start_Point_Count==1 && End_Point_Count==1) return true;
+    else{
+        if (Start_Point_Count!=1) cout<<" Fatal Wrong , Cannot find the start point or more than one start point !!! "<<endl;
+        if (End_Point_Count!=1) cout<<" Fatal Wrong , Cannot find the end point or more than one end point !!! "<<endl;
+        return false;
+    }
+}
 
 
 float A_Star::H_Calculat(PNode *cur,PNode *end)
@@ -118,6 +157,7 @@ int A_Star::Search()
             Tmp_adjacent_next_node->G=Opt_node->G+1;
             Tmp_adjacent_next_node->H=H_Calculat(Tmp_adjacent_next_node,map.End_node);
             Tmp_adjacent_next_node->F=Tmp_adjacent_next_node->G+Tmp_adjacent_next_node->H;
+            Tmp_adjacent_next_node->open_flag=1;    //The open_flag should be modified! --20200312
             open_List.Heap_push(make_pair(Tmp_adjacent_next_node->F,Tmp_adjacent_next_node));
         }
 
@@ -134,8 +174,9 @@ int A_Star::Search()
                 Tmp_adjacent_next_node->H=tmp_H;
                 Tmp_adjacent_next_node->F=tmp_F;
                 Tmp_adjacent_next_node->path_before=Opt_node;
-                open_List.Heap_delect(Tmp_adjacent_next_node);
-                open_List.Heap_push(make_pair(Tmp_adjacent_next_node->F,Tmp_adjacent_next_node));
+                //open_List.Heap_delect(Tmp_adjacent_next_node);
+                //open_List.Heap_push(make_pair(Tmp_adjacent_next_node->F,Tmp_adjacent_next_node));
+                open_List.Heap_modify(Tmp_adjacent_next_node,Tmp_adjacent_next_node->F);
 
             }
             else {
