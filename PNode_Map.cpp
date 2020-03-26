@@ -127,7 +127,7 @@ void PNode_Map::Build_Map(const vector<vector<int>>& array){
  */
     Start_node=pnode[i_start][j_start];
     End_node=pnode[i_end][j_end];
-    cout<<" The Map has been created succesfull !!! "<<endl;
+    //cout<<" The Map has been created succesfull !!! "<<endl;
 }
 
 void PNode_Map::Clear_Map(){
@@ -142,6 +142,6 @@ void PNode_Map::Clear_Map(){
     pnode.clear();
     Start_node=nullptr;
     End_node=nullptr;
-    cout<<" The Map has been cleared succesfull !!! "<<endl;
+    //cout<<" The Map has been cleared succesfull !!! "<<endl;
 }
 

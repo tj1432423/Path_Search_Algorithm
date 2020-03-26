@@ -13,6 +13,7 @@ public:
     void Heap_pop();
     void Heap_delect(T_NODE* const obj_Node);
     void Heap_modify(T_NODE* const obj_Node,T_VALUE obj_val);
+    void Heap_clear();
     size_t Heap_size();
     pair<T_VALUE,T_NODE *> Heap_top();
 
@@ -150,5 +151,10 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::siftup(size_t index){     //将索引为I
     }
 }
 
+template<class T_VALUE,class T_NODE>
+void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_clear(){
+    Min_Heap.clear();
+    Mp.clear();
+}
 
 #endif

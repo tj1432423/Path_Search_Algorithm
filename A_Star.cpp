@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Time){
+int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Time,bool Debug_Info_Switch){
     //为简单，干脆把把下面数组转为链表结构的数组
     //约定：0是可走的，1表示障碍物不可走，2表示起点，3表示终点
 //    vector<vector<int>> array={
@@ -24,6 +24,7 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
 //        { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
 //        { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
 //        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+    debug_info_switch=Debug_Info_Switch;
     int Error_flag=0;
     bool Input_OK=false;
     Input_OK =Input_Verify(array);
@@ -52,7 +53,7 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
         Search_end_flag=Search();
         if (Search_end_flag==1)
          {
-            cout<<" Having find the useable path !!! "<<endl;
+            if(debug_info_switch)  cout<<" Having find the useable path !!! "<<endl;
             Error_flag=0;
             break;
          }
@@ -89,7 +90,7 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
 
     }
 
-    map.Clear_Map();
+    //map.Clear_Map();
 
     return Error_flag;
 }
@@ -200,4 +201,10 @@ int A_Star::Search()
     }
 
     return 0;
+}
+
+void A_Star::clear(){
+    Shortest_Path.clear();
+    open_List.Heap_clear();
+    map.Clear_Map();
 }

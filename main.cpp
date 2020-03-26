@@ -24,7 +24,7 @@ int main()
 
     A_Star a_star;
     int Max_Search_Time=100;
-    int Errorflag=a_star.Get_Shortest_Path(array,Max_Search_Time);
+    int Errorflag=a_star.Get_Shortest_Path(array,Max_Search_Time,false);
 
     cout<<" After "<<a_star.Count<<" times search,";
     cout<<" The Shortest_Path_Long is "<<a_star.Shortest_Path_Long<<" ! "<<endl;
@@ -36,6 +36,8 @@ int main()
             cout<<" ["<<a_star.Shortest_Path[i][0]<<" , "<<a_star.Shortest_Path[i][1]<<"] -> ";
         }
     }
+    cout<<endl;
+    a_star.clear();
     return 0;
 }
 
