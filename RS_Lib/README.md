@@ -1,4 +1,4 @@
-本代码非原创，来源：
+本RS_Lib非原创，来源：
 https://github.com/longjianquan/reeds_shepp
 
 帮作者的博客打个广告：
