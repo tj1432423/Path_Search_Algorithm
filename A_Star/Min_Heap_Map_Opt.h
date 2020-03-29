@@ -2,6 +2,7 @@
 #define MIN_HEAP_MAP_OPT_H
 
 #include <unordered_map>
+#include <map>
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -24,7 +25,8 @@ private:
     void siftup(size_t index);
 
     vector<pair<T_VALUE,T_NODE *>> Min_Heap;
-    unordered_map<T_NODE *,size_t> Mp;
+    //unordered_map<T_NODE *,size_t> Mp;
+    map<T_NODE *,size_t> Mp;
 };
 
 
@@ -111,6 +113,7 @@ pair<T_VALUE,T_NODE *> Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_top(){
 template<class T_VALUE,class T_NODE>
 void Min_Heap_Map_Opt<T_VALUE,T_NODE>::siftdown(size_t index){     //将索引为Index的节点下沉
     if(index>=Min_Heap.size()){
+        cout<<index<<"---"<<Min_Heap.size()<<"---"<<endl;
         cout<<" The Index is out of the range of Open_List_Min_Heap!!! ----siftdown"<<endl;
         return;
     }

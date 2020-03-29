@@ -3,8 +3,13 @@
 //#include <queue>
 //#include <stdio.h>
 //#include <math.h>
-#include <iostream>
+//#include <vector>
+//#include <cassert>
+//#include <typeinfo>
+//#include <vector>
 
+#include <boost/math/constants/constants.hpp>
+#include <iostream>
 #include <vector>
 
 
@@ -65,7 +70,7 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
          }
         if (Search_end_flag==2)
          {
-            cout<<" Can not find the useable path !!! "<<endl;
+            if(debug_info_switch)  cout<<" Can not find the useable path !!! "<<endl;
             Error_flag=1;
             break;
          }
@@ -83,10 +88,10 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
             tmp=tmp->path_before;
             Shortest_Path_Long++;
         }
-        //reverse(Shortest_Path.begin(),Shortest_Path.end());  // " use of undlclared identifier 'reverse' ..."  ----it is why?
-        for(size_t i=0;i<Shortest_Path.size()/2;i++){
-            swap(Shortest_Path[i],Shortest_Path[Shortest_Path.size()-1-i]);
-        }
+        reverse(Shortest_Path.begin(),Shortest_Path.end());  // " use of undlclared identifier 'reverse' ..."  ----it is why?  need #include <boost/math/constants/constants.hpp>
+        //for(size_t i=0;i<Shortest_Path.size()/2;i++){
+        //    swap(Shortest_Path[i],Shortest_Path[Shortest_Path.size()-1-i]);
+        //}
 
     }
 
@@ -134,7 +139,7 @@ float A_Star::float_abs(float x){
 int A_Star::Search()
 {   
      if (open_List.Heap_size()==0){
-         cout<<" The Open_List_Min_Heap is empty !!! "<<endl;
+         if(debug_info_switch)  cout<<" The Open_List_Min_Heap is empty !!! "<<endl;
          return 2;
      }
      PNode *Opt_node;
