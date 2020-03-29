@@ -25,16 +25,16 @@ private:
     void siftup(size_t index);
 
     vector<pair<T_VALUE,T_NODE *>> Min_Heap;
-    //unordered_map<T_NODE *,size_t> Mp;
-    map<T_NODE *,size_t> Mp;
+    unordered_map<T_NODE *,size_t> Mp;
+    //map<T_NODE *,size_t> Mp;
 };
 
 
 template<class T_VALUE,class T_NODE>
 void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_push(const pair<T_VALUE,T_NODE *>& new_node_pair){
     Min_Heap.push_back(new_node_pair);
-    Mp[new_node_pair.second]=Min_Heap.size()-1;
-    siftup(Min_Heap.size()-1);
+    Mp[new_node_pair.second]=Min_Heap.size()-size_t(1);
+    siftup(Min_Heap.size()-size_t(1));
 }
 
 
@@ -46,12 +46,18 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_pop(){
     }
     if (Min_Heap.size()==1){
         Mp.erase(Min_Heap.front().second);
+        if(Mp.count(Min_Heap.front().second)){
+            cout<<" The Mp in the Open_List_Min_Heap is faill !!! --1"<<endl;
+        }
         Min_Heap.pop_back();
         return;
     }
     swap(Min_Heap[0],Min_Heap[Min_Heap.size()-1]);
     Mp[Min_Heap[0].second]=0;
     Mp.erase(Min_Heap.back().second);
+    if(Mp.count(Min_Heap.back().second)){
+        cout<<" The Mp in the Open_List_Min_Heap is faill !!! --2"<<endl;
+    }
     Min_Heap.pop_back();
     siftdown(0);
 }
@@ -78,11 +84,17 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_delect(T_NODE* const obj_Node){
 
 template<class T_VALUE,class T_NODE>
 void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_modify(T_NODE* const obj_Node,T_VALUE obj_val){
+    //cout<<" ----Heap_modify"<<endl;
     if(Mp.count(obj_Node)==0){
         cout<<" Cannot find this node in Open_List_Min_Heap!!! ----Heap_modify"<<endl;
         return;
     }
     size_t index=Mp[obj_Node];
+    if(index>=Min_Heap.size()){
+        cout<<" The index is out of the range in Open_List_Min_Heap!!! ----Heap_modify"<<endl;
+        cout<<Mp[obj_Node]<<endl;
+        return;
+    }
     Min_Heap[index].first=obj_val;    //update
     if (index!=0 && Min_Heap[index]<Min_Heap[(index-1)/2]){     // 若节点小于父亲节点上浮
         siftup(index);
