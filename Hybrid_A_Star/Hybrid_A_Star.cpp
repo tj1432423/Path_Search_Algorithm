@@ -4,8 +4,8 @@
 #include <math.h>
 #include <limits.h>
 
-#define pi 3.1415926
-#define BIG_COST float(99999999.9)
+#define pi float(3.1415926)
+#define BIG_COST float(9999.9)
 
 void Hybrid_A_Star::Set_Vehicle_Parameters(float _max_front_wheel_angle,float _wheel_base,float _back_to_rear,float _front_to_rear,float _width){
     vehicle_parameters.wheel_base=_wheel_base;
@@ -46,6 +46,10 @@ bool Hybrid_A_Star::Load_Map(const vector<vector<int>>& _array,const vector<floa
     array=_array;
     vector<int> index_end_point;
     vector<int> index_start_point;
+    vector<float> tmp(_array.size(),0.0);
+    vector<vector<float>> ttmp(_array[0].size(),tmp);
+    a_star_distance_table=ttmp;  //only initial
+
     index_end_point=Point_Index_Calculate(end_point);
     index_start_point=Point_Index_Calculate(start_point);
 
@@ -53,9 +57,7 @@ bool Hybrid_A_Star::Load_Map(const vector<vector<int>>& _array,const vector<floa
     if(array[size_t(index_start_point[0])][size_t(index_start_point[1])] !=0 ) return false;
     if(array[size_t(index_end_point[0])][size_t(index_end_point[1])] !=0 ) return false;
     A_Star a_star;
-    vector<float> tmp(_array.size(),0.0);
-    vector<vector<float>> ttmp(_array[0].size(),tmp);
-    a_star_distance_table=ttmp;  //only initial
+
     array[size_t(index_end_point[0])][size_t(index_end_point[1])]=3;   //set the end_point;
 
     for(size_t i=0;i<array.size();i++){
@@ -86,6 +88,7 @@ bool Hybrid_A_Star::Load_Map(const vector<vector<int>>& _array,const vector<floa
             a_star.clear();         //very important!!!! ----KDK 20200329
         }
     }
+    a_star.clear();
     return true;
 }
 
@@ -108,9 +111,10 @@ bool Hybrid_A_Star::Get_The_Shortest_Path(int Max_Search_Time){
         open_list.Heap_push(make_pair(start_hybrid_a_star_node->F,start_hybrid_a_star_node));
     }
     vector<int> tmp={start_hybrid_a_star_node->index_x,start_hybrid_a_star_node->index_y,start_hybrid_a_star_node->index_phi};
-    mp[make_pair(tmp,start_hybrid_a_star_node->direction)]=start_hybrid_a_star_node;
+    mp[Vector_to_Three_Pair(tmp)]=start_hybrid_a_star_node;
      /*************** Main Search begin ****************/
     int count=0;
+
     while(open_list.Heap_size()){
         Hybrid_A_Star_Node* current_node=open_list.Heap_top().second;
         open_list.Heap_pop();
@@ -124,10 +128,17 @@ bool Hybrid_A_Star::Get_The_Shortest_Path(int Max_Search_Time){
         double q1[3]={end_point[0],end_point[1],end_point[2]};
         ReedsSheppStateSpace   reedssheppstatespace(vehicle_parameters.min_turn_radius);
         vector<vector<double>> tmp_rs_finalpath;
-        tmp_rs_finalpath=reedssheppstatespace.xingshensample(q0,q1,search_parameters.move_resolution);
+
+
+        //tmp_rs_finalpath=reedssheppstatespace.xingshensample(q0,q1,search_parameters.move_resolution);        //这一块RS代码，似乎有点问题，导致我的算法崩溃，哪天重写吧-------KDK
+        //bool rs_path_ok=true;
+        bool rs_path_ok=false;
+
+
+
         /******************** RS colliction verify***********************/
         vector<vector<float>> rs_finalpath;
-        bool rs_path_ok=true;
+
         for(size_t i=0;i<tmp_rs_finalpath.size();i++){
             rs_finalpath.push_back({float(tmp_rs_finalpath[i][0]),float(tmp_rs_finalpath[i][1]),float(tmp_rs_finalpath[i][2])});
             //cout<<"-->"<<"[ "<<rs_finalpath.back()[0]<<","<<rs_finalpath.back()[1]<<","<<rs_finalpath.back()[2]<<" ]";
@@ -137,7 +148,7 @@ bool Hybrid_A_Star::Get_The_Shortest_Path(int Max_Search_Time){
             }
         }
         if(rs_path_ok){
-               cout<<"the rs path is ok!!"<<endl;
+               //cout<<"the rs path is ok!!"<<endl;
                 rs_path=rs_finalpath;
                 Hybrid_A_Star_Node* tmp_get_res_ptr;
                 tmp_get_res_ptr=current_node;
@@ -179,13 +190,13 @@ bool Hybrid_A_Star::search(Hybrid_A_Star_Node* _current_node){                  
 
             target_pos=Vehicle_Kinematic(current_pos,front_wheel_angle,search_parameters.move_resolution,direction);
 
-            cout<<front_wheel_angle<<"-----------[ "<<target_pos[0]<<","<<target_pos[1]<<","<<target_pos[2]<<","<<target_pos[3]<<" ]"<<endl;
+            //cout<<front_wheel_angle<<"-----------[ "<<target_pos[0]<<","<<target_pos[1]<<","<<target_pos[2]<<","<<target_pos[3]<<" ]"<<endl;
             if(Collision_Check(target_pos)){          //trajectory has no collision!
                 vector<int> index_target_pos=Point_Index_Calculate(target_pos);
                 float tmp_Cost=Move_Cost_Calculate(_current_node,front_wheel_angle,direction);
                 float tmp_G=tmp_Cost+_current_node->G;
-                if(mp.count(make_pair(index_target_pos,direction))){
-                    Hybrid_A_Star_Node* tmp_node=mp[make_pair(index_target_pos,direction)];
+                if(mp.count(Vector_to_Three_Pair(index_target_pos))){
+                    Hybrid_A_Star_Node* tmp_node=mp[Vector_to_Three_Pair(index_target_pos)];
                     if(tmp_node->close_flag==true && tmp_node->open_flag==false){    //in the close_list
                         continue;
                     }
@@ -209,11 +220,10 @@ bool Hybrid_A_Star::search(Hybrid_A_Star_Node* _current_node){                  
                     Set_The_Hybrid_A_Star_Node(tmp_node,target_pos,direction,_current_node,tmp_G);
                     tmp_node->open_flag=true;
                     tmp_node->close_flag=false;
-                    mp[make_pair(index_target_pos,direction)]=tmp_node;
+                    mp[Vector_to_Three_Pair(index_target_pos)]=tmp_node;
                     open_list.Heap_push(make_pair(tmp_node->F,tmp_node));
                 }
             }
-            cout<<"22222222222222"<<endl;
         }
     }
     return true;
@@ -221,8 +231,12 @@ bool Hybrid_A_Star::search(Hybrid_A_Star_Node* _current_node){                  
 
 bool Hybrid_A_Star::Collision_Check(const vector<float>& target_pos){       //need modify!!!!!!!!!!!!!!!
     vector<int> index_target_pos=Point_Index_Calculate(target_pos);
-    if(index_target_pos[0]>=0 && size_t(index_target_pos[0])<obstacles_map.size() && index_target_pos[1]>=0 && size_t(index_target_pos[1])<obstacles_map[0].size()){
-        if(obstacles_map[size_t(index_target_pos[0])][size_t(index_target_pos[1])]==0){
+    int max_index_x=obstacles_map.size()-1;
+    int max_index_y=obstacles_map[0].size()-1;
+    int min_index_x=0;
+    int min_index_y=0;
+    if(index_target_pos[0]>=min_index_x && index_target_pos[0]<=max_index_x && index_target_pos[1]>=min_index_y && index_target_pos[1]<max_index_y){
+        if(obstacles_map[index_target_pos[0]][index_target_pos[1]]==0){
             return true;
         }
     }
@@ -271,6 +285,9 @@ vector<float> Hybrid_A_Star::Vehicle_Kinematic(const vector<float>& _current_pos
 
 void Hybrid_A_Star::Set_The_Hybrid_A_Star_Node(Hybrid_A_Star_Node* _targer_hybrid_a_star_node,vector<float> _point,Drive_Direction _direction,Hybrid_A_Star_Node* _node_before,float _G){
     // the struct of _point-->[x,y,phi,front_wheel_angle]
+    if(_point.size() != 4){
+        cout<<"fatel wrong !!! the size() of _point myust be 4 !!!  ---Set_The_Hybrid_A_Star_Node "<<endl;
+    }
     _targer_hybrid_a_star_node->x=_point[0];
     _targer_hybrid_a_star_node->y=_point[1];
     _targer_hybrid_a_star_node->phi=_point[2];
@@ -287,6 +304,7 @@ void Hybrid_A_Star::Set_The_Hybrid_A_Star_Node(Hybrid_A_Star_Node* _targer_hybri
         _targer_hybrid_a_star_node->H=a_star_distance_table[size_t(_targer_hybrid_a_star_node->index_x)][size_t(_targer_hybrid_a_star_node->index_y)];
     }
     else{
+        cout<<"This point is out of the map!!! "<<endl;
         _targer_hybrid_a_star_node->H=BIG_COST;
     }
     _targer_hybrid_a_star_node->F=_targer_hybrid_a_star_node->G+_targer_hybrid_a_star_node->H;
@@ -294,10 +312,41 @@ void Hybrid_A_Star::Set_The_Hybrid_A_Star_Node(Hybrid_A_Star_Node* _targer_hybri
 
 vector<int> Hybrid_A_Star::Point_Index_Calculate(const vector<float>& _point){
     vector<int> Index(3,0);
-    Index[1]=round(_point[0]);
-    Index[0]=round(_point[1]);
-    Index[2]=round(_point[2]/search_parameters.heading_resolution);
+    if(_point.size() <3){
+        cout<<"fatel wrong !!! the size of _point is less than 3 !!! -----Point_Index_Calculate"<<endl;
+        return Index;
+    }
+    Index[1]=int(round(_point[0]));
+    Index[0]=int(round(_point[1]));
+//    int max_index_x=a_star_distance_table.size()-1;
+//    int max_index_y=a_star_distance_table[0].size()-1;
+//    int min_index_x=0;
+//    int min_index_y=0;
+//    if(Index[0]<min_index_x || Index[1]<min_index_y){
+//        cout<<"fatel wrong !!! the index id out of the range !!!   lower----"<<endl;
+//        cout<<Index[0]<<"   "<<Index[1]<<endl;
+//        cout<<_point[0]<<"   "<<_point[1]<<endl;
+//        cout<<min_index_x<<"   "<<min_index_y<<endl;
+//    }
+//    if(Index[0]>max_index_x || Index[1]>max_index_y){
+//        cout<<"fatel wrong !!! the index id out of the range !!!  upper----"<<endl;
+//        cout<<Index[0]<<"   "<<Index[1]<<endl;
+//        cout<<a_star_distance_table.size()<<"---"<<a_star_distance_table[0].size()<<endl;
+//    }
+    float tmp_hread=_point[2];
+    while(tmp_hread<0){
+        tmp_hread=tmp_hread+float(2.0)*pi;
+    }
+    Index[2]=round(tmp_hread/fabs(search_parameters.heading_resolution));
     return Index;
+}
+
+Three_Pair Hybrid_A_Star::Vector_to_Three_Pair(const vector<int>& _index){
+    if(_index.size() !=3){
+        cout<<"fatel wrong !!! Cant change the Index to the pair !!! -----Vector_to_Three_Pair"<<endl;
+        return make_pair(make_pair(0,0),0);
+    }
+    return make_pair(make_pair(_index[0],_index[1]),_index[2]);
 }
 
 

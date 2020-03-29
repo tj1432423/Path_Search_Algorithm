@@ -14,6 +14,8 @@
 #include "../A_Star/Min_Heap_Map_Opt.h"
 #include "Hybrid_A_Star_Node.h"
 
+#define Three_Pair pair<pair<int,int>,int>
+
 class Vehicle_Parameters{
 public:
     float max_front_wheel_angle;
@@ -63,6 +65,8 @@ private:
 
     float Move_Cost_Calculate(Hybrid_A_Star_Node* _current_node,float _front_wheel_angle,Drive_Direction _direction);
 
+    Three_Pair Vector_to_Three_Pair(const vector<int>& _index);
+
     Vehicle_Parameters vehicle_parameters;
     Search_Parameters search_parameters;
 
@@ -73,7 +77,10 @@ private:
     vector<vector<int>> obstacles_map;
 
     Min_Heap_Map_Opt<float,Hybrid_A_Star_Node> open_list;  //min heap of Hybrid_A_Star_Node
-    map<pair<vector<int>,Drive_Direction>,Hybrid_A_Star_Node*> mp;   // input the vector {index_x,index_y,index_phi}, can get the address of Hybrid_A_Star_Node
+    //map<pair<vector<int>,Drive_Direction>,Hybrid_A_Star_Node*> mp;   // input the vector {index_x,index_y,index_phi}, can get the address of Hybrid_A_Star_Node
+    //map<vector<int>,Hybrid_A_Star_Node*> mp;   // input the vector {index_x,index_y,index_phi}, can get the address of Hybrid_A_Star_Node
+    map<Three_Pair,Hybrid_A_Star_Node*> mp;   // input the vector {index_x,index_y,index_phi}, can get the address of Hybrid_A_Star_Node
+
 };
 
 
