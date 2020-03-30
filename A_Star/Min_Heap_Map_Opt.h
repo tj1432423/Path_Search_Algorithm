@@ -153,7 +153,7 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::siftup(size_t index){     //将索引为I
         cout<<" The Index is out of the range of Open_List_Min_Heap!!!---- siftup"<<endl;
         return;
     }
-    while((int(index)-1)/2>=0){   //索引为Index的节点不是根节点时
+    while(int(index)!=0 && (int(index)-1)/2>=0){   //索引为Index的节点不是根节点时  // the condition "int(index)!=0" is very important !!! modified by KDK in 20200330!!!
         size_t c=(index-1)/2;
         if(Min_Heap[index]<Min_Heap[c]){
             swap(Min_Heap[index],Min_Heap[c]);  // 若孩子节点小于父亲节点,交换位置
