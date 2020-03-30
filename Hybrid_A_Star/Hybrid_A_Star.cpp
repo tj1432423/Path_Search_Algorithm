@@ -1,6 +1,7 @@
 #include "Hybrid_A_Star.h"
 #include "../A_Star/A_Star.h"
-#include "../RS_Lib/rs.h"
+//#include "../RS_Lib/rs.h"
+#include "../Reedsshepp_Dubins/reeds_shepp.h"
 #include <math.h>
 #include <limits.h>
 
@@ -115,29 +116,30 @@ bool Hybrid_A_Star::Get_The_Shortest_Path(int Max_Search_Time){
      /*************** Main Search begin ****************/
     int count=0;
 
+
+
     while(open_list.Heap_size()){
         Hybrid_A_Star_Node* current_node=open_list.Heap_top().second;
         open_list.Heap_pop();
         current_node->open_flag=false;
         current_node->close_flag=true;
 
-        cout<<"the top open list node:[ "<<current_node->x<<","<<current_node->y<<" ]"<<endl;
+        //cout<<"the top open list node:[ "<<current_node->x<<","<<current_node->y<<" ]"<<endl;
 
         /************************RS shengcheng***************************/
         double q0[3]={current_node->x,current_node->y,current_node->phi};
         double q1[3]={end_point[0],end_point[1],end_point[2]};
+
+        double length;
         ReedsSheppStateSpace   reedssheppstatespace(vehicle_parameters.min_turn_radius);
         vector<vector<double>> tmp_rs_finalpath;
-
-
-        //tmp_rs_finalpath=reedssheppstatespace.xingshensample(q0,q1,search_parameters.move_resolution);        //这一块RS代码，似乎有点问题，导致我的算法崩溃，哪天重写吧-------KDK
-        //bool rs_path_ok=true;
-        bool rs_path_ok=false;
-
+        vector<vector<float>> rs_finalpath;
+        reedssheppstatespace.sample(q0,q1,double(search_parameters.collision_check_resolution),length,tmp_rs_finalpath);
+        bool rs_path_ok=true;
 
 
         /******************** RS colliction verify***********************/
-        vector<vector<float>> rs_finalpath;
+
 
         for(size_t i=0;i<tmp_rs_finalpath.size();i++){
             rs_finalpath.push_back({float(tmp_rs_finalpath[i][0]),float(tmp_rs_finalpath[i][1]),float(tmp_rs_finalpath[i][2])});
@@ -235,8 +237,8 @@ bool Hybrid_A_Star::Collision_Check(const vector<float>& target_pos){       //ne
     int max_index_y=obstacles_map[0].size()-1;
     int min_index_x=0;
     int min_index_y=0;
-    if(index_target_pos[0]>=min_index_x && index_target_pos[0]<=max_index_x && index_target_pos[1]>=min_index_y && index_target_pos[1]<max_index_y){
-        if(obstacles_map[index_target_pos[0]][index_target_pos[1]]==0){
+    if(index_target_pos[0]>=min_index_x && index_target_pos[0]<=max_index_x && index_target_pos[1]>=min_index_y && index_target_pos[1]<=max_index_y){
+        if(obstacles_map[size_t(index_target_pos[0])][size_t(index_target_pos[1])]==0){
             return true;
         }
     }

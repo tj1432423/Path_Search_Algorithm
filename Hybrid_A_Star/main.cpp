@@ -17,8 +17,8 @@ int main()
 
     float _heading_resolution=5.0/180.0*pi;
     float _front_wheel_angle_resolution=5.0/180.0*pi;
-    float _move_resolution=1.6;
-    float _collision_check_resolution=1.5;
+    float _move_resolution=1.5;
+    float _collision_check_resolution=0.1;
     bool _debug_info_switch=true;
     hybrid_a_star.Set_Search_Parameters(_heading_resolution,_front_wheel_angle_resolution,_move_resolution,_collision_check_resolution,_debug_info_switch);
 
@@ -49,19 +49,23 @@ int main()
         }
         cout<<endl;
     }
+
+   /********** Load Map ****************/
     cout<<"------------------------"<<endl;
     vector<float> _start_point(4,0.0);
     _start_point[0]=1;
     _start_point[1]=2;
     _start_point[2]=0;
     vector<float> _end_point(4,0.0);
-    _end_point[0]=1;
+    _end_point[0]=5;
     _end_point[1]=26;
     //_end_point[2]=float(0);
     _end_point[2]=float(pi);
     int _Max_Search_Time=500;
     hybrid_a_star.Load_Map(_array,_start_point,_end_point,_Max_Search_Time);
     cout<<"---load map sucessfull !!!---"<<endl;
+
+   /********** Display The A* distance  ****************/
 //    for(size_t i=0;i<hybrid_a_star.a_star_distance_table.size();i++){
 //        for(size_t j=0;j<hybrid_a_star.a_star_distance_table[i].size();j++){
 //            cout<<hybrid_a_star.a_star_distance_table[i][j]<<" ";
@@ -69,6 +73,8 @@ int main()
 //        cout<<endl;
 //    }
 
+
+ /********** Main Hybrid A* search  ****************/
     hybrid_a_star.Get_The_Shortest_Path(_Max_Search_Time);
     //cout<<"------------------------"<<endl;
     for(size_t i=0;i<hybrid_a_star.a_star_path.size();i++){
