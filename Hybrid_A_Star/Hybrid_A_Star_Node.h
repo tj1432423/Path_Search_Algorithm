@@ -1,4 +1,4 @@
-#include"../A_Star/PNode.h"
+#include"../A_Star/A_Star_Node.h"
 
 //class ssNode{
 //public:

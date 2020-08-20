@@ -1,11 +1,13 @@
 #include "Hybrid_A_Star.h"
+#include "Plot.cpp"
 #include <iostream>
+
 
 #define pi 3.1415926
 
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
     Hybrid_A_Star hybrid_a_star;
     float _max_front_wheel_angle=40.0/180.0*pi;
@@ -17,7 +19,7 @@ int main()
 
     float _heading_resolution=5.0/180.0*pi;
     float _front_wheel_angle_resolution=5.0/180.0*pi;
-    float _move_resolution=1.5;
+    float _move_resolution=0.5;
     float _collision_check_resolution=0.1;
     bool _debug_info_switch=true;
     hybrid_a_star.Set_Search_Parameters(_heading_resolution,_front_wheel_angle_resolution,_move_resolution,_collision_check_resolution,_debug_info_switch);
@@ -59,9 +61,9 @@ int main()
     vector<float> _end_point(4,0.0);
     _end_point[0]=5;
     _end_point[1]=26;
-    //_end_point[2]=float(0);
-    _end_point[2]=float(pi);
-    int _Max_Search_Time=500;
+    _end_point[2]=float(0);
+    //_end_point[2]=float(pi);
+    int _Max_Search_Time=50000;
     hybrid_a_star.Load_Map(_array,_start_point,_end_point,_Max_Search_Time);
     cout<<"---load map sucessfull !!!---"<<endl;
 
@@ -89,6 +91,16 @@ int main()
     cout<<"------------"<<endl;
     cout<<" -> [ "<<_end_point[0]<<" , "<<_end_point[1]<<" , "<<_end_point[2]<<" ]"<<endl;
     //cout<<" The search is over !!!!!!!!!!!!";
+
+    /********** PLOT ****************/
+
+    vector<vector<float>> Plot_tmp=hybrid_a_star.a_star_path;
+    for(size_t i=0;i<hybrid_a_star.rs_path.size();i+=5){
+        Plot_tmp.push_back(hybrid_a_star.rs_path[i]);
+    }
+    //Plot_tmp.insert(Plot_tmp.end(),hybrid_a_star.rs_path.begin(),hybrid_a_star.rs_path.end());
+    PLOT::Set_data(Plot_tmp,_array);
+    PLOT::Plot_data(argc,argv);
 
     return 0;
 }

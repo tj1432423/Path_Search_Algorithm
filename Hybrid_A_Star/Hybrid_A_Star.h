@@ -38,6 +38,9 @@ public:
 
 class Hybrid_A_Star{
 public:
+//    Hybrid_A_Star(){}
+//    ~Hybrid_A_Star();
+
     void Set_Vehicle_Parameters(float _max_front_wheel_angle,float _wheel_base,float _back_to_rear,float _front_to_rear,float _width);
 
     void Set_Search_Parameters(float _heading_resolution,float _front_wheel_angle_resolution,float _move_resolution,float _collision_check_resolution,bool _debug_info_switch);

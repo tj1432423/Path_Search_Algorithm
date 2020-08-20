@@ -247,8 +247,8 @@ bool Hybrid_A_Star::Collision_Check(const vector<float>& target_pos){       //ne
 
 float Hybrid_A_Star::Move_Cost_Calculate(Hybrid_A_Star_Node* _current_node,float _front_wheel_angle,Drive_Direction _direction){
     float Cost=0;
-    float weight_1=float(1.0);
-    float weight_2=float(2.0);
+    float weight_1=float(5.0);
+    float weight_2=float(1.0);
     Cost+=weight_1*fabs(_front_wheel_angle-_current_node->steer_angle);
     Cost+=weight_2*fabs(_direction-_current_node->direction);
     Cost+=search_parameters.move_resolution;
@@ -353,7 +353,16 @@ Three_Pair Hybrid_A_Star::Vector_to_Three_Pair(const vector<int>& _index){
 
 
 
-
+//Hybrid_A_Star::~Hybrid_A_Star(){
+//    rs_path.clear();
+//    a_star_path.clear();
+//    a_star_distance_table.clear();
+//    start_point.clear();
+//    end_point.clear();
+//    obstacles_map.clear();
+//    open_list.Heap_clear();
+//    mp.clear();
+//}
 
 
 
