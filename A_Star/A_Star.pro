@@ -1,10 +1,19 @@
 HEADERS += \
     A_Star.h \
-    PNode.h\
+    Node.h\
+    A_Star_Node.h\
     Min_Heap_Map_Opt.h\
-    PNode_Map.h
+    Adjacent_Node_Map.h
+
 
 SOURCES += \
     main.cpp \
     A_Star.cpp\
-    PNode_Map.cpp
+    Plot.cpp
+    #Adjacent_Node_Map.cpp
+
+INCLUDEPATH +=\
+               /usr/local/include
+
+
+LIBS += -lGL -lglut

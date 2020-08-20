@@ -45,7 +45,8 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
     map.Start_node->H=H_Calculat(map.Start_node,map.End_node);
     map.Start_node->F=map.Start_node->G+map.Start_node->H;
     map.Start_node->open_flag=1;
-    open_List.Heap_push(make_pair(map.Start_node->F,map.Start_node));
+    vector<float> tmp_key={map.Start_node->F,map.Start_node->H} ;
+    open_List.Heap_push(make_pair(tmp_key,map.Start_node));
 //   cout<<"hello world!  "<<Open_List->next->G<<" , "<<Open_List->next->H<<endl;
 
 /********** main search ****************/
@@ -80,7 +81,7 @@ int A_Star::Get_Shortest_Path(const vector<vector<int>>& array,int Max_Search_Ti
     }
     if (Error_flag==0)
     {
-        PNode *tmp=map.End_node;
+        A_Star_Node *tmp=map.End_node;
         while(tmp)
         {
             //cout<<" ["<<tmp->x<<" , "<<tmp->y<<"] -> ";
@@ -125,7 +126,7 @@ bool A_Star::Input_Verify(const vector<vector<int>>& array){
 }
 
 
-float A_Star::H_Calculat(PNode *cur,PNode *end)
+float A_Star::H_Calculat(A_Star_Node *cur,A_Star_Node *end)
 {
     float res=float_abs(cur->x-end->x)+float_abs(cur->y-end->y);
     return res;
@@ -142,14 +143,14 @@ int A_Star::Search()
          if(debug_info_switch)  cout<<" The Open_List_Min_Heap is empty !!! "<<endl;
          return 2;
      }
-     PNode *Opt_node;
+     A_Star_Node *Opt_node;
      Opt_node=open_List.Heap_top().second;
      Opt_node->open_flag=0;
      Opt_node->close_flag=1;
      open_List.Heap_pop();
     for(size_t i=0;i<Opt_node->adjacent_node.size();i++)
     {
-        PNode* Tmp_adjacent_next_node=Opt_node->adjacent_node[i];
+        A_Star_Node* Tmp_adjacent_next_node=Opt_node->adjacent_node[i];
         if (Tmp_adjacent_next_node->nodetype==EndPoint)       // End point has been found!!!
         {
             Tmp_adjacent_next_node->path_before=Opt_node;
@@ -164,7 +165,8 @@ int A_Star::Search()
             Tmp_adjacent_next_node->H=H_Calculat(Tmp_adjacent_next_node,map.End_node);
             Tmp_adjacent_next_node->F=Tmp_adjacent_next_node->G+Tmp_adjacent_next_node->H;
             Tmp_adjacent_next_node->open_flag=1;    //The open_flag should be modified! --20200312
-            open_List.Heap_push(make_pair(Tmp_adjacent_next_node->F,Tmp_adjacent_next_node));
+            vector<float> tmp_key={Tmp_adjacent_next_node->F,Tmp_adjacent_next_node->H} ;
+            open_List.Heap_push(make_pair(tmp_key,Tmp_adjacent_next_node));
         }
 
         else if(Tmp_adjacent_next_node->open_flag==1 && Tmp_adjacent_next_node->close_flag==0)
@@ -182,7 +184,8 @@ int A_Star::Search()
                 Tmp_adjacent_next_node->path_before=Opt_node;
                 //open_List.Heap_delect(Tmp_adjacent_next_node);
                 //open_List.Heap_push(make_pair(Tmp_adjacent_next_node->F,Tmp_adjacent_next_node));
-                open_List.Heap_modify(Tmp_adjacent_next_node,Tmp_adjacent_next_node->F);
+                vector<float> tmp_key={Tmp_adjacent_next_node->F,Tmp_adjacent_next_node->H} ;
+                open_List.Heap_modify(Tmp_adjacent_next_node,tmp_key);
 
             }
             else {
@@ -212,4 +215,11 @@ void A_Star::clear(){
     Shortest_Path.clear();
     open_List.Heap_clear();
     map.Clear_Map();
+    Shortest_Path_Long=0;
+    Count=0;  //Search Time
+    debug_info_switch=false;
 }
+
+//A_Star::~A_Star(){
+//    clear();
+//}

@@ -10,6 +10,9 @@ using namespace std;
 template<class T_VALUE,class T_NODE>
 class Min_Heap_Map_Opt{
 public:
+//    Min_Heap_Map_Opt(){}
+//    ~Min_Heap_Map_Opt();
+
     void Heap_push(const pair<T_VALUE,T_NODE *>& new_node_pair);
     void Heap_pop();
     void Heap_delect(T_NODE* const obj_Node);
@@ -116,7 +119,8 @@ template<class T_VALUE,class T_NODE>
 pair<T_VALUE,T_NODE *> Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_top(){
     if (Min_Heap.empty()){
         cout<<" The Open_List_Min_Heap is empty !!! "<<endl;
-        return make_pair(0,nullptr);
+        T_VALUE tmp;
+        return make_pair(tmp,nullptr);
     }
     return Min_Heap[0];
 }
@@ -171,5 +175,10 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_clear(){
     Min_Heap.clear();
     Mp.clear();
 }
+
+//template<class T_VALUE,class T_NODE>
+//Min_Heap_Map_Opt<T_VALUE,T_NODE>::~Min_Heap_Map_Opt(){
+//   Heap_clear();
+//}
 
 #endif

@@ -1,14 +1,15 @@
 #include "A_Star.h"
+#include "Plot.cpp"
 
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
     /********** Creat Map ****************/
     //算法的输入为vector<vector<int>>类型的数组，且必须是m*n的矩形形式
     //约定：0是可走的，1表示障碍物不可走，2表示起点，3表示终点
     vector<vector<int>> array={
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
     { 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 },
@@ -37,7 +38,13 @@ int main()
         }
     }
     cout<<endl;
-    a_star.clear();
+
+    /********** PLOT ****************/
+    PLOT::Set_data(a_star.Shortest_Path,array);
+    PLOT::Plot_data(argc,argv);
+
+
+    //a_star.clear();
     return 0;
 }
 
