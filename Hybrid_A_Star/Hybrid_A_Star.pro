@@ -24,7 +24,8 @@ SOURCES += \
 
 
 INCLUDEPATH +=\
-               /usr/local/include
+               /usr/local/include \
+                ../Lib
 
 
 LIBS += -lGL -lglut

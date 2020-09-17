@@ -11,7 +11,7 @@
 //#include "PNode_Map.h"
 //#include <pair>
 #include <map>
-#include "../A_Star/Min_Heap_Map_Opt.h"
+#include "Min_Heap_Map_Opt.h"
 #include "Hybrid_A_Star_Node.h"
 
 #define Three_Pair pair<pair<int,int>,int>
