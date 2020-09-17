@@ -1,6 +1,6 @@
 # A_Star
 
-Created by Daike Kang for the practice of A* and Hybrid A* algorithm.
+Created by Daike Kang for the practice of graph search algorithm.
 
 It is still under continuous improvement.
 
