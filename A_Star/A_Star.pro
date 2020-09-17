@@ -13,7 +13,8 @@ SOURCES += \
     #Adjacent_Node_Map.cpp
 
 INCLUDEPATH +=\
-               /usr/local/include
+               /usr/local/include \
+                ../Lib
 
 
 LIBS += -lGL -lglut
