@@ -1,6 +1,6 @@
 # A_Star
 
-Created by Daike Kang for the practice of graph search algorithm.
+Created by Daike Kang for the practice of path search algorithm.
 
 It is still under continuous improvement.
 
