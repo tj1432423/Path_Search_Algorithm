@@ -1,7 +1,7 @@
 #ifndef MIN_HEAP_MAP_OPT_H
 #define MIN_HEAP_MAP_OPT_H
 
-#include <unordered_map>
+//#include <unordered_map>
 #include <map>
 #include <iostream>
 #include <vector>
@@ -28,8 +28,8 @@ private:
     void siftup(size_t index);
 
     vector<pair<T_VALUE,T_NODE *>> Min_Heap;
-    unordered_map<T_NODE *,size_t> Mp;
-    //map<T_NODE *,size_t> Mp;
+    //unordered_map<T_NODE *,size_t> Mp;
+    map<T_NODE *,size_t> Mp;
 };
 
 
@@ -77,7 +77,7 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_delect(T_NODE* const obj_Node){
     Mp[Min_Heap[index].second]=index;
     Mp.erase(Min_Heap.back().second);
     Min_Heap.pop_back();
-    if (index!=0 && Min_Heap[index]<Min_Heap[(index-1)/2]){     // 若节点小于父亲节点上浮
+    if (index!=0 && Min_Heap[index].first<Min_Heap[(index-1)/2].first){     // 若节点小于父亲节点上浮
         siftup(index);
     }
     else{                                                        // 若节点不于父亲节点下沉
@@ -99,7 +99,7 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::Heap_modify(T_NODE* const obj_Node,T_VALU
         return;
     }
     Min_Heap[index].first=obj_val;    //update
-    if (index!=0 && Min_Heap[index]<Min_Heap[(index-1)/2]){     // 若节点小于父亲节点上浮
+    if (index!=0 && Min_Heap[index].first<Min_Heap[(index-1)/2].first){     // 若节点小于父亲节点上浮
         siftup(index);
     }
     else{                                                        // 若节点不于父亲节点下沉
@@ -138,8 +138,8 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::siftdown(size_t index){     //将索引�
         size_t c_left,c_right,c;
         c_left=2*index+1;   //左孩子节点索引
         c_right=2*index+2;  //又孩子节点索引
-        c=(c_right<size && Min_Heap[c_left]>Min_Heap[c_right]) ? c_right : c_left;  // c是值最小的孩子节点
-        if (Min_Heap[index]>Min_Heap[c]) {
+        c=(c_right<size && Min_Heap[c_left].first>Min_Heap[c_right].first) ? c_right : c_left;  // c是值最小的孩子节点
+        if (Min_Heap[c].first<Min_Heap[index].first) {
             swap(Min_Heap[index],Min_Heap[c]);  // 若孩子节点小于父亲节点,交换位置
             Mp[Min_Heap[index].second]=index;
             Mp[Min_Heap[c].second]=c;
@@ -159,7 +159,7 @@ void Min_Heap_Map_Opt<T_VALUE,T_NODE>::siftup(size_t index){     //将索引为I
     }
     while(int(index)!=0 && (int(index)-1)/2>=0){   //索引为Index的节点不是根节点时  // the condition "int(index)!=0" is very important !!! modified by KDK in 20200330!!!
         size_t c=(index-1)/2;
-        if(Min_Heap[index]<Min_Heap[c]){
+        if(Min_Heap[index].first<Min_Heap[c].first){
             swap(Min_Heap[index],Min_Heap[c]);  // 若孩子节点小于父亲节点,交换位置
             Mp[Min_Heap[index].second]=index;
             Mp[Min_Heap[c].second]=c;
