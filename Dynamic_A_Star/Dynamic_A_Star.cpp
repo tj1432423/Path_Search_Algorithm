@@ -1,4 +1,5 @@
 #include "Dynamic_A_Star.h"
+#include <cmath>
 
 using namespace DYNAMIC_A_STAR_NAMESPACE;
 
@@ -189,7 +190,7 @@ VALUE DYNAMIC_A_STAR::process_state(){
                     insert(X,X->H);
                 }
                 else {
-                    if(Y->next != X && X->H > (Y->H +Cost(X,Y)) && Y->nodetype==DYNAMIC_A_STAR_NODE::Close && Y->H > k_old){
+                    if(Y->next != X && X->H > (Y->H +Cost(Y,X)) && Y->nodetype==DYNAMIC_A_STAR_NODE::Close && Y->H > k_old){
                         insert(Y,Y->H);
                     }
                 }
