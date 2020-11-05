@@ -1,4 +1,4 @@
-# A_Star
+# Path_Search_Algorithm
 
 Created by Daike Kang for the practice of path search algorithm.
 
